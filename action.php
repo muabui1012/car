@@ -15,7 +15,7 @@ if(isset($_POST["category"])){
 			$cid = $row["cat_id"];
 			$cat_name = $row["cat_title"];
 			echo "
-					<li><a href='#' class='category' cid='$cid'>$cat_name</a></li>
+					<li><a href='#' class='category' cid='$cid'>$cid $cat_name</a></li>
 			";
 		}
 		echo "</div>";
@@ -33,7 +33,7 @@ if(isset($_POST["brand"])){
 			$bid = $row["brand_id"];
 			$brand_name = $row["brand_title"];
 			echo "
-					<li><a href='#' class='selectBrand' bid='$bid'>$brand_name</a></li>
+					<li><a href='#' class='selectBrand' bid='$bid'>$bid $brand_name</a></li>
 			";
 		}
 		echo "</div>";
@@ -41,14 +41,8 @@ if(isset($_POST["brand"])){
 }
 
 if(isset($_POST["getProduct"])){
-	$limit = 9;
-	if(isset($_POST["setPage"])){
-		$pageno = $_POST["pageNumber"];
-		$start = ($pageno * $limit) - $limit;
-	}else{
-		$start = 0;
-	}
-	$product_query = "SELECT * FROM products LIMIT $start,$limit";
+
+	$product_query = "SELECT * FROM products";
 	$run_query = mysqli_query($con,$product_query);
 	if(mysqli_num_rows($run_query) > 0){
 		while($row = mysqli_fetch_array($run_query)){
@@ -59,6 +53,12 @@ if(isset($_POST["getProduct"])){
 			$pro_price = $row['product_price'];
 			$pro_image = $row['product_image'];
 			$pro_year = $row['product_year'];
+			$pro_sold = $row['sold'];
+			if ($pro_sold == 0) {
+				$sold = "Available";
+			} else {
+				$sold = "SOLD";
+			}
 
 			$brand_query = "SELECT * FROM brands where brand_id = '$pro_brand'";
 			$run_query_1 = mysqli_query($con, $brand_query);
@@ -79,6 +79,7 @@ if(isset($_POST["getProduct"])){
 								<div class='panel-body'>
 									<img src='product_images/$pro_image' style='width:160px; height:250px;'/>
 									<div class='panel-heading'> $pro_year </div>
+									<div class='panel-heading'> Status: $sold </div>
 								</div>
 								<div class='panel-heading'>".CURRENCY." $pro_price.00
 									<button pid='$pro_id' style='float:right;' id='product' class='btn btn-danger btn-xs'>AddToCart</button>
@@ -109,6 +110,12 @@ if(isset($_POST["get_seleted_Category"]) || isset($_POST["selectBrand"])){
 			$pro_price = $row['product_price'];
 			$pro_image = $row['product_image'];
 			$pro_year = $row['product_year'];
+			$pro_sold = $row['sold'];
+			if ($pro_sold == 0) {
+				$sold = "Available";
+			} else {
+				$sold = "SOLD";
+			}
 
 			$brand_query = "SELECT * FROM brands where brand_id = '$pro_brand'";
 			$run_query_1 = mysqli_query($con, $brand_query);
@@ -128,6 +135,7 @@ if(isset($_POST["get_seleted_Category"]) || isset($_POST["selectBrand"])){
 								<div class='panel-body'>
 									<img src='product_images/$pro_image' style='width:160px; height:250px;'/>
 									<div class='panel-heading'> $pro_year </div>
+									<div class='panel-heading'> Status: $sold </div>
 								</div>
 								<div class='panel-heading'>$.$pro_price.00
 									<button pid='$pro_id' style='float:right;' id='product' class='btn btn-danger btn-xs'>AddToCart</button>
@@ -139,18 +147,41 @@ if(isset($_POST["get_seleted_Category"]) || isset($_POST["selectBrand"])){
 	}
 	
 
-
-	
+if(isset($_POST["addToCart"])){
 		
-		
-		
-		
+	$product_id = $_POST['proId'];
 	
+	$user_id = $_SESSION['user_id'];
 
+	$updatesql = "UPDATE products set sold = true where product_id = '$product_id'"; 
 
+	mysqli_query($con, $updatesql);
 
+	echo "<meta http-equiv='refresh' content='0'>";
+
+	// $sql = "SELECT * FROM cart WHERE user_id = '$user_id'";
+	// $run_query = mysqli_query($con,$sql);
+
+	$sql = "INSERT INTO `orders`
+			(`user_id`, `product_id`) 
+			VALUES ('$user_id', '$product_id')";
+			if(mysqli_query($con,$sql)){
+				echo "
+					<div class='alert alert-success'>
+						<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
+						<b>Product is Added..!</b>
+
+					</div>
+					
+					
+					
+				";
+				
+				
+			}
 	
-	
+}
+
 
 
 
@@ -158,8 +189,6 @@ if(isset($_POST["get_seleted_Category"]) || isset($_POST["selectBrand"])){
 
 
 ?>
-
-
 
 
 

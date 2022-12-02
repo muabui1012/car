@@ -27,9 +27,7 @@ session_start();
 
 					echo "Signup successful!";
 
-					sleep(5);
-
-					header("Location: login.php");
+					header("Location: admin_user.php");
 					die;
 				} else {
 					echo "This username or email is already used!";

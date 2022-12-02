@@ -15,6 +15,24 @@ session_start();
 		if(!empty($user_name) && !empty($password) && !is_numeric($user_name))
 		{
 
+			$adquery = "select * from admin where admin_name = '$user_name' limit 1";
+			$adresult = mysqli_query($con, $adquery);
+			if($adresult)
+			{
+				if($adresult && mysqli_num_rows($adresult) > 0)
+				{
+
+					$ad_data = mysqli_fetch_assoc($adresult);
+					
+					if($ad_data['admin_password'] === $password)
+					{
+
+						
+						header("Location: admin.php");
+						die;
+					}
+				}
+			}
 			//read from database
 			$query = "select * from users where user_name = '$user_name' limit 1";
 			$result = mysqli_query($con, $query);
