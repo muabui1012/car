@@ -109,13 +109,14 @@ include("db.php");
               echo " <td > {$pro_brand}</td>";
               echo " <td > {$pro_title}</td>";
               echo " <td > {$pro_price}</td>";
-              echo " <td > {$pro_image}</td>";
+              echo " <td > <img src='product_images/$pro_image' style='width:160px; height:250px;'/> </td>";
+              
               echo " <td > {$pro_year}</td>";
               echo " <td > {$pro_sold}</td>";
              
               echo " <td class='text-center' > <a href='updateproduct.php?edit&user_id={$pro_id}' class='btn btn-secondary'><i class='bi bi-pencil'></i> EDIT</a> </td>";
 
-              echo " <td  class='text-center'>  <a href='deleteproduct.php?delete={$pro_id}' class='btn btn-danger'> <i class='bi bi-trash'></i> DELETE</a> </td>";
+              echo " <td  class='text-center'>  <a href='deleteproduct_user.php?delete={$pro_id}' class='btn btn-danger'> <i class='bi bi-trash'></i> DELETE</a> </td>";
               echo " </tr> ";
             }      
          ?>

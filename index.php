@@ -53,36 +53,78 @@ $user_data = check_login($con);
 	<p><br/></p>
 	<p><br/></p>
 	<p><br/></p>
-	<div class="container-fluid">
-		<div class="row">
-			<div class="col-md-1"></div>
-			<div class="col-md-2 col-xs-12">
-				<div id="get_category">
-				</div>
-				
-				<div id="get_brand"> 
-				</div>
-			
-			</div>
-			<div class="col-md-8 col-xs-12">
-				<div class="row">
-					<div class="col-md-12 col-xs-12" id="product_msg">
-					</div>
-				</div>
-				<div class="panel panel-info">
-					<div class="panel-heading">Products</div>
-					<div class="panel-body">
-						<div id="get_product">
-							<!--Here we get product jquery Ajax Request-->
-						</div>
-					
-					</div>
-					
-				</div>
-			</div>
-			<div class="col-md-1"></div>
-		</div>
-	</div>
+	<div class="container">
+    
+    
+
+        <table class="table table-striped table-bordered table-hover">
+          <thead class="table-dark">
+            <tr>
+    
+              <th  scope="col">Cat</th>
+              <th  scope="col"> Brand</th>
+              <th  scope="col">Name</th>
+              <th  scope="col"> Price</th>
+              <th  scope="col"> Image</th>
+              <th  scope="col"> Year</th>
+              <th  scope="col"> Sold</th>
+              <th  scope="col" colspan="1" class="text-center">Function</th>
+            </tr>  
+          </thead>
+            <tbody>
+              <tr>
+ 
+          <?php
+            $sql="SELECT * FROM products";               // SQL query to fetch all table data
+            $query= mysqli_query($con,$sql);    // sending the query to the database
+
+            //  displaying all the data retrieved from the database using while loop
+            while($row= mysqli_fetch_array($query)){
+                $pro_id    = $row['product_id'];
+                $pro_cat   = $row['product_cat'];
+                $pro_brand = $row['product_brand'];
+                $pro_title = $row['product_title'];
+                $pro_price = $row['product_price'];
+                $pro_image = $row['product_image'];
+                $pro_year = $row['product_year'];
+                $pro_sold = $row['sold'];
+                if ($pro_sold == 0) {
+                    $sold = "Available";
+                } else {
+                    $sold = "SOLD";
+                }
+    
+                $brand_query = "SELECT * FROM brands where brand_id = '$pro_brand'";
+                $run_query_1 = mysqli_query($con, $brand_query);
+                $brand_row = mysqli_fetch_array($run_query_1);
+                $brand_name = $brand_row['brand_title']; 
+    
+                $cat_query = "SELECT * FROM categories where cat_id = '$pro_cat'";
+                $run_query_2 = mysqli_query($con, $cat_query);
+                $cat_row = mysqli_fetch_array($run_query_2);
+                $cat_name = $cat_row['cat_title'];      
+            
+
+              echo "<tr >";
+              
+              echo " <td > {$cat_name}</td>";
+              echo " <td > {$brand_name}</td>";
+              echo " <td > {$pro_title}</td>";
+              echo " <td > {$pro_price}</td>";
+              echo " <td > <img src='product_images/$pro_image' style='width:160px; height:250px;'/> </td>";
+              echo " <td > {$pro_year}</td>";
+              echo " <td > {$pro_sold}</td>";
+             
+              echo " <td class='text-center' > <button pid='$pro_id' style='float:right;' id='product' class='btn btn-danger btn-xs'>AddToCart</button></td>";
+
+             
+              echo " </tr> ";
+            }      
+         ?>
+              </tr>  
+            </tbody>
+        </table>
+  </div>
 </body>
 </html>
 
